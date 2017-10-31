@@ -1,0 +1,34 @@
+#-*-coding:utf-8-*-
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import json
+def numfun(x,mean,std):
+    pdf=np.exp(-((x-mean)**2)/(2*std**2))/(std*np.sqrt(2*np.pi))
+    return pdf
+new_name=['time','pos','breath','states','sn','wet','heartbeat']
+date1=pd.read_csv('C:\Users\Administrator\Desktop\output.csv',header=7,names=new_name,encoding='utf-8')
+#time=date['time']
+#mean=time.mean()
+#-------------
+with open('C:/Users/Administrator/Desktop/file1.json','r') as f:
+    dat=json.load(f)
+date2=pd.DataFrame(dat['result'])
+date=pd.concat([date1,date2])
+#--------------
+htb=date['heartbeat']
+#均值
+mean=htb.mean()
+#标准差
+std=htb.std()
+x=np.arange(0,100,1)
+#概率密度
+y=numfun(x,mean,std)
+#图plot(参数,颜色，线宽)
+
+plt.plot(x,y,color='g',linewidth=3)
+plt.hist(htb,bins=7,color='r',alpha=0.5,rwidth=0.9,normed=True)
+plt.title('HeartBeat Distribution')
+plt.xlabel('HeartBeat Number')
+plt.ylabel('Probability')
+plt.show()
